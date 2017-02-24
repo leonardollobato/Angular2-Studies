@@ -3,12 +3,21 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { InventoryComponent, ProductListComponent } from './app.component';
+import { InventoryComponent, 
+  ProductListComponent, 
+  ProductRowComponent, 
+  ProductImageComponent, 
+  ProductDepartmentComponent,
+  PriceDisplayComponent } from './app.component';
 
 @NgModule({
   declarations: [
     InventoryComponent,
-    ProductListComponent
+    ProductListComponent,
+    ProductRowComponent,
+    ProductImageComponent,
+    ProductDepartmentComponent,
+    PriceDisplayComponent
   ],
   imports: [
     BrowserModule,

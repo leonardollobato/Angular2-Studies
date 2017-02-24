@@ -19,19 +19,19 @@ export class InventoryComponent {
       new Product(
         'NICEHAT',
         'A Nice Black Hat',
-        '/resources/images/products/black-hat.jpg',
+        '/assets/images/products/black-hat.jpg',
         ['Men', 'Accessories', 'Hats'],
         29.99),
       new Product(
         'TSHIRT',
         'A Nice Shirt',
-        '/resources/images/products/black-hat.jpg',
+        '/assets/images/products/blue-jacket.jpg',
         ['Unisex', 'Clothers'],
         54.99),
       new Product(
         'SHOES',
         'A SHoe that is Black',
-        '/resources/images/products/black-hat.jpg',
+        '/assets/images/products/black-shoes.jpg',
         ['Men', 'Shoes', 'Black'],
         159.99)
     ]
@@ -60,10 +60,10 @@ class Product{
   outputs: ['onProductSelected'],
   template: `
     <div class="ui items">
-      <product-row
+      <product-row 
         *ngFor="let myProduct of productList"
         [product]="myProduct"
-        (click)='clicked(myProduct)"
+        (click)="clicked(myProduct)"
         [class.selected]="isSelected(myProduct)">
       </product-row>
     </div>
@@ -82,5 +82,82 @@ export class ProductListComponent{
     // custom event instance
     this.onProductSelected = new EventEmitter();
   }
+
+  clicked(product: Product):void{
+    this.currentProduct = product;
+    this.onProductSelected.emit(product);
+  }
+
+  isSelected(product:Product):boolean{
+    if(!product || !this.currentProduct){
+      return false;
+    }
+    return product.sku === this.currentProduct.sku;
+  }
+}
+
+@Component({
+  selector: 'product-row',
+  inputs:['product'],
+  host: {'class':'item'},
+  template: `
+    <product-image [product]="product"></product-image>
+    <div class="content">
+      <div class="header"> {{ product.name }} </div>
+      <div class="meta">
+        <div class="product-sku"> SKU #{{ product.sku }}</div>
+      </div>
+      <div class="description">
+        <product-department [product]="product"></product-department>
+      </div>
+    </div>
+    <price-display [price]="product.price"></price-display>
+  `
+})
+
+export class ProductRowComponent{
+  product:Product;
+}
+
+@Component({
+  selector: 'product-image',
+  inputs:['product'],
+  host: {'class':'ui small image'},
+  template: `
+    <img class="product-image" [src]="product.imageUrl">
+  `
+})
+
+export class ProductImageComponent{
+  product:Product;
+}
+
+@Component({
+  selector: 'product-department',
+  inputs:['product'],
+  template: `
+    <div class="product-department">
+      <span *ngFor="let name of product.department; let i=index">
+        <a href="#"> {{ name }} </a>
+        <span> {{ i < (product.department.length -1) ? '>' : '' }} </span>
+      </span>
+    </div>
+  `
+})
+
+export class ProductDepartmentComponent{
+  product:Product;
+}
+
+@Component({
+  selector: 'price-display',
+  inputs:['price'],
+  template: `
+    <div class="price-display">\${{ price }}</div>
+  `
+})
+
+export class PriceDisplayComponent{
+  price:number;
 }
 
